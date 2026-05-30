@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Режим «Чистое искусство»</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --text-color: #ffffff;
+            --accent-color: #c5a059; /* Благородное театральное золото */
+            --btn-bg: #222222;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 90vh;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            color: var(--accent-color);
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        p {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #aaaaaa;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            display: none; /* По умолчанию скрыты, JS покажет нужную */
+            background-color: var(--accent-color);
+            color: #000000;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(197, 160, 89, 0.3);
+            transition: transform 0.2s, opacity 0.2s;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+            opacity: 0.9;
+        }
+
+        .instruction {
+            margin-top: 25px;
+            font-size: 0.85rem;
+            color: #666666;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="icon">🎭</div>
+        <h1>Режим «Чистое искусство»</h1>
+        <p>Добро пожаловать в театр! Нажмите кнопку ниже, чтобы телефон автоматически затих на время спектакля (2 часа) и сам включил звук после занавеса.</p>
+
+        <!-- Кнопка для iPhone -->
+        <a href="ССЫЛКА_НА_ВАШУ_КОМАНДУ_APPLE_SHORTCUTS" id="ios-btn" class="btn">
+            Включить режим «Театр»
+        </a>
+
+        <!-- Кнопка для Android -->
+        <a href="intent:#Intent;action=android.settings.ZEN_MODE_SETTINGS;end" id="android-btn" class="btn">
+            Настроить тишину (2 часа)
+        </a>
+
+        <!-- Запасной вариант, если ОС не определилась -->
+        <div id="default-instruction" style="display: none;">
+            <p style="color: var(--accent-color);">Пожалуйста, переведите ваш телефон в беззвучный режим вручную.</p>
+        </div>
+
+        <div class="instruction">
+            * Исходящая связь и экстренные вызовы будут работать как обычно. Режим отключится автоматически через 120 минут.
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const uagent = navigator.userAgent.toLowerCase();
+            const iosBtn = document.getElementById("ios-btn");
+            const androidBtn = document.getElementById("android-btn");
+            const defIns = document.getElementById("default-instruction");
+
+            if (/iphone|ipad|ipod/.test(uagent)) {
+                // Показываем кнопку для iOS
+                iosBtn.style.display = "inline-block";
+            } else if (/android/.test(uagent)) {
+                // Показываем кнопку для Android
+                androidBtn.style.display = "inline-block";
+            } else {
+                // Если зашли с ПК или редкой ОС
+                defIns.style.display = "block";
+            }
+        });
+    </script>
+
+</body>
+</html>
