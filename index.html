@@ -82,27 +82,41 @@
         <h1>Режим «Чистое искусство»</h1>
         <p>Добро пожаловать в театр! Нажмите кнопку ниже, чтобы телефон автоматически затих на время спектакля (2 часа) и сам включил звук после занавеса.</p>
 
-        <!-- Кнопка для iPhone -->
-        <a href="shortcuts://run-shortcut?name=Режим Театра" id="ios-btn" class="btn">
+        <a href="#" id="ios-btn" class="btn" onclick="runIosShortcut(event)">
             Включить режим «Театр»
         </a>
 
-        <!-- Кнопка для Android -->
-        <a href="intent:#Intent;action=android.settings.ZEN_MODE_SETTINGS;end" id="android-btn" class="btn" onclick="location.href=this.href; return false;">Включить режим Театр (Android)</a>
-            Настроить тишину (2 часа)
+        <a href="#" id="android-btn" class="btn" onclick="showAndroidHelp(event)">
+            Включить режим «Театр»
         </a>
 
-        <!-- Запасной вариант, если ОС не определилась -->
         <div id="default-instruction" style="display: none;">
             <p style="color: var(--accent-color);">Пожалуйста, переведите ваш телефон в беззвучный режим вручную.</p>
         </div>
 
         <div class="instruction">
-            * Исходящая связь и экстренные вызовы будут работать как обычно. Режим отключится автоматически через 120 минут.
+            * Исходящая связь и экстренные вызовы будут работать как обычно. На iPhone режим отключится автоматически через 120 минут.
+        </div>
+    </div>
+
+    <div id="androidHelpModal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100%; height:100%; background-color:rgba(0,0,0,0.85); align-items:center; justify-content:center;">
+        <div style="background-color:#1a1a1a; color:#fff; padding:30px; border-radius:20px; width:85%; max-width:360px; text-align:center; border:3px solid var(--accent-color);">
+            <h2 style="color:var(--accent-color); margin-top:0; font-size:22px;">Внимание, зритель!</h2>
+            
+            <p style="font-size:18px; line-height:1.6; margin:20px 0; text-align:center;">
+                Пожалуйста, нажмите на телефоне <br>
+                <span style="background-color:var(--accent-color); color:#000; padding:4px 10px; border-radius:5px; font-weight:bold; white-space: nowrap;">боковую кнопку уменьшения звука</span> <br>
+                и переведите телефон в <b>вибро</b> или <b>беззвучный режим</b>.
+            </p>
+            
+            <button onclick="closeAndroidHelp()" style="background-color:var(--accent-color); color:#000; border:none; padding:12px; font-size:18px; font-weight:bold; border-radius:10px; cursor:pointer; width:100%; margin-top:10px;">Я выключил звук</button>
         </div>
     </div>
 
     <script>
+        // Ваша публичная ссылка на команду из iCloud
+        const icloudLink = "https://www.icloud.com/shortcuts/45ae049e3f8f4e93b2ebd07d9b337fb8"; 
+
         document.addEventListener("DOMContentLoaded", function() {
             const uagent = navigator.userAgent.toLowerCase();
             const iosBtn = document.getElementById("ios-btn");
@@ -110,16 +124,38 @@
             const defIns = document.getElementById("default-instruction");
 
             if (/iphone|ipad|ipod/.test(uagent)) {
-                // Показываем кнопку для iOS
                 iosBtn.style.display = "inline-block";
             } else if (/android/.test(uagent)) {
-                // Показываем кнопку для Android
                 androidBtn.style.display = "inline-block";
             } else {
-                // Если зашли с ПК или редкой ОС
                 defIns.style.display = "block";
             }
         });
+
+        // Функция для iPhone
+        function runIosShortcut(event) {
+            event.preventDefault();
+            
+            // 1. Пробуем запустить команду локально
+            window.location.href = "shortcuts://run-shortcut?name=Режим театра";
+            
+            // 2. Если команды нет, через 1.5 секунды предлагаем скачать её из iCloud
+            setTimeout(function() {
+                if (confirm("Похоже, у вас еще не установлена команда для театра. Открыть страницу установки?")) {
+                    window.location.href = icloudLink;
+                }
+            }, 1500);
+        }
+
+        // Функции для Android окон
+        function showAndroidHelp(event) {
+            event.preventDefault();
+            document.getElementById('androidHelpModal').style.display = 'flex';
+        }
+
+        function closeAndroidHelp() {
+            document.getElementById('androidHelpModal').style.display = 'none';
+        }
     </script>
 
 </body>
