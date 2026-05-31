@@ -8,12 +8,11 @@
         :root {
             --bg-color: #121212;
             --text-color: #ffffff;
-            --accent-color: #c5a059; /* Благородное театральное золото */
-            --btn-bg: #222222;
+            --accent-color: #c5a059; /* Театральное золото */
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             text-align: center;
@@ -50,28 +49,84 @@
         }
 
         .btn {
-            display: none; /* По умолчанию скрыты, JS покажет нужную */
+            display: inline-block;
             background-color: var(--accent-color);
             color: #000000;
             text-decoration: none;
-            padding: 15px 30px;
+            padding: 15px 40px;
             border-radius: 30px;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: bold;
             box-shadow: 0 4px 15px rgba(197, 160, 89, 0.3);
-            transition: transform 0.2s, opacity 0.2s;
+            transition: transform 0.2s;
+            border: none;
+            cursor: pointer;
+            width: 80%;
         }
 
         .btn:active {
             transform: scale(0.98);
-            opacity: 0.9;
         }
 
-        .instruction {
-            margin-top: 25px;
-            font-size: 0.85rem;
-            color: #666666;
-            line-height: 1.4;
+        /* Стильное окно для всех смартфонов */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: #1a1a1a;
+            color: #fff;
+            padding: 30px;
+            border-radius: 20px;
+            width: 85%;
+            max-width: 340px;
+            text-align: center;
+            border: 2px solid var(--accent-color);
+        }
+
+        .modal h2 {
+            color: var(--accent-color);
+            margin-top: 0;
+            font-size: 22px;
+        }
+
+        .modal p {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #ffffff;
+            margin: 20px 0;
+        }
+
+        .highlight {
+            background-color: var(--accent-color);
+            color: #000000;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 5px 0;
+        }
+
+        .close-btn {
+            background-color: var(--accent-color);
+            color: #000000;
+            border: none;
+            padding: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
         }
     </style>
 </head>
@@ -80,81 +135,30 @@
     <div class="container">
         <div class="icon">🎭</div>
         <h1>Режим «Чистое искусство»</h1>
-        <p>Добро пожаловать в театр! Нажмите кнопку ниже, чтобы телефон автоматически затих на время спектакля (2 часа) и сам включил звук после занавеса.</p>
+        <p>Добро пожаловать в театр! Нажмите кнопку ниже, чтобы подготовить ваш телефон к просмотру спектакля.</p>
 
-        <a href="#" id="ios-btn" class="btn" onclick="runIosShortcut(event)">
-            Включить режим «Театр»
-        </a>
-
-        <a href="#" id="android-btn" class="btn" onclick="showAndroidHelp(event)">
-            Включить режим «Театр»
-        </a>
-
-        <div id="default-instruction" style="display: none;">
-            <p style="color: var(--accent-color);">Пожалуйста, переведите ваш телефон в беззвучный режим вручную.</p>
-        </div>
-
-        <div class="instruction">
-            * Исходящая связь и экстренные вызовы будут работать как обычно. На iPhone режим отключится автоматически через 120 минут.
-        </div>
+        <button class="btn" onclick="openHelp()">Включить режим «Театр»</button>
     </div>
 
-    <div id="androidHelpModal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100%; height:100%; background-color:rgba(0,0,0,0.85); align-items:center; justify-content:center;">
-        <div style="background-color:#1a1a1a; color:#fff; padding:30px; border-radius:20px; width:85%; max-width:360px; text-align:center; border:3px solid var(--accent-color);">
-            <h2 style="color:var(--accent-color); margin-top:0; font-size:22px;">Внимание, зритель!</h2>
-            
-            <p style="font-size:18px; line-height:1.6; margin:20px 0; text-align:center;">
-                Пожалуйста, нажмите на телефоне <br>
-                <span style="background-color:var(--accent-color); color:#000; padding:4px 10px; border-radius:5px; font-weight:bold; white-space: nowrap;">боковую кнопку уменьшения звука</span> <br>
-                и переведите телефон в <b>вибро</b> или <b>беззвучный режим</b>.
+    <div id="helpModal" class="modal">
+        <div class="modal-content">
+            <h2>Уважаемый зритель!</h2>
+            <p>
+                Пожалуйста, нажмите на телефоне<br>
+                <span class="highlight">боковую кнопку уменьшения звука</span><br>
+                до упора вниз или переведите переключатель в беззвучный режим.
             </p>
-            
-            <button onclick="closeAndroidHelp()" style="background-color:var(--accent-color); color:#000; border:none; padding:12px; font-size:18px; font-weight:bold; border-radius:10px; cursor:pointer; width:100%; margin-top:10px;">Я выключил звук</button>
+            <button class="close-btn" onclick="closeHelp()">Я выключил звук</button>
         </div>
     </div>
 
     <script>
-        // Ваша публичная ссылка на команду из iCloud
-        const icloudLink = "https://www.icloud.com/shortcuts/45ae049e3f8f4e93b2ebd07d9b337fb8"; 
-
-        document.addEventListener("DOMContentLoaded", function() {
-            const uagent = navigator.userAgent.toLowerCase();
-            const iosBtn = document.getElementById("ios-btn");
-            const androidBtn = document.getElementById("android-btn");
-            const defIns = document.getElementById("default-instruction");
-
-            if (/iphone|ipad|ipod/.test(uagent)) {
-                iosBtn.style.display = "inline-block";
-            } else if (/android/.test(uagent)) {
-                androidBtn.style.display = "inline-block";
-            } else {
-                defIns.style.display = "block";
-            }
-        });
-
-        // Функция для iPhone
-        function runIosShortcut(event) {
-            event.preventDefault();
-            
-            // 1. Пробуем запустить команду локально
-            window.location.href = "shortcuts://run-shortcut?name=Режим театра";
-            
-            // 2. Если команды нет, через 1.5 секунды предлагаем скачать её из iCloud
-            setTimeout(function() {
-                if (confirm("Похоже, у вас еще не установлена команда для театра. Открыть страницу установки?")) {
-                    window.location.href = icloudLink;
-                }
-            }, 1500);
+        function openHelp() {
+            document.getElementById('helpModal').style.display = 'flex';
         }
 
-        // Функции для Android окон
-        function showAndroidHelp(event) {
-            event.preventDefault();
-            document.getElementById('androidHelpModal').style.display = 'flex';
-        }
-
-        function closeAndroidHelp() {
-            document.getElementById('androidHelpModal').style.display = 'none';
+        function closeHelp() {
+            document.getElementById('helpModal').style.display = 'none';
         }
     </script>
 
